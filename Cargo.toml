@@ -1,0 +1,13 @@
+[package]
+name = "rustnpp"
+version = "0.1.0"
+authors = ["ნიკა <nika.begiashvili@gmail.com>"]
+
+[lib]
+crate-type = ["dylib"]
+
+[dependencies]
+libc="*"
+winapi="*"
+lazy_static = "0.1.*"
+user32-sys = "*"
