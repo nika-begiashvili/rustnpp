@@ -8,59 +8,29 @@ extern crate user32;
 extern crate core;
 
 use winapi::minwindef;
-use std::process::{Command};
-use def::{to_wide_chars,function_item_text,TCHAR,NppData,ShortcutKey,FuncItem};
-//use std::io::{BufWriter, Write};
+use def::{to_wide_chars,TCHAR,NppData,FuncItem};
 
 mod def;
+mod plugindata;
+mod helpers;
 
 #[macro_use]
 extern crate lazy_static;
 
-static mut SHORT_KEY1: ShortcutKey = ShortcutKey{
-	_isCtrl: false,
-	_isAlt: false,
-	_isShift: false,
-	_key: 116,
-};
-
 lazy_static! {
     static ref PROG_NAME: Vec<u16> = to_wide_chars("Rust plugin");
 	static ref FUNC_ITEMS: Vec<FuncItem> = vec![
-		FuncItem{ 
-			_itemName: function_item_text("Run"), 
-			_pFunc: testFn, 
-			_cmdID: 0, 
-			_init2Check: false,
-			_pShKey: unsafe{ std::mem::transmute( &mut SHORT_KEY1 as *mut ShortcutKey ) }
-		}
+		plugindata::FuncItem_Run()
 	];
 }
-
-//  item functions
-#[allow(unused_variables)]
-pub extern "C" fn testFn(){
-	let cmdProc = Command::new("cmd").
-						arg("/c").
-						arg("start").
-						arg("cmd").
-						arg("/c").
-						arg("pause").
-						//stdin(Stdio::piped()).
-						spawn().unwrap();
-	//let mut cmdStdin = cmdProc.stdin.unwrap();
-	//let mut writer = BufWriter::new(&mut cmdStdin);
-}
-// ______________
-
 
 #[no_mangle]
 pub extern "C" fn isUnicode() -> bool{ true }
 
 #[allow(unused_variables)]
 #[no_mangle]
-pub extern "C" fn setInfo( notpadPlusData:NppData ) {
-	
+pub extern "C" fn setInfo( notpadPlusData : NppData ) {
+	unsafe{ plugindata::NPP_DATA = Some(notpadPlusData); }
 }
 
 #[no_mangle]

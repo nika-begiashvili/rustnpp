@@ -9,6 +9,7 @@ use std;
 pub type TCHAR = u16;
 
 #[repr(C)]
+#[derive(Clone)]
 pub struct NppData{
 	pub _nppHandle: windef::HWND,
 	pub _scintillaMainHandle: windef::HWND,
@@ -38,7 +39,6 @@ pub fn to_wide_chars(s: &str) -> Vec<u16> {
     OsStr::new(s).encode_wide().chain(Some(0).into_iter()).collect::<Vec<_>>()
 }
 
-#[allow(dead_code)]
 pub fn from_wide_ptr(ptr: *const u16) -> String {
     use std::ffi::OsString;
     use std::os::windows::ffi::OsStringExt;
