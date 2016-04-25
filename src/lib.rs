@@ -13,6 +13,7 @@ use def::{to_wide_chars,TCHAR,NppData,FuncItem};
 mod def;
 mod plugindata;
 mod helpers;
+mod functions;
 
 #[macro_use]
 extern crate lazy_static;
@@ -20,7 +21,8 @@ extern crate lazy_static;
 lazy_static! {
     static ref PROG_NAME: Vec<u16> = to_wide_chars("Rust plugin");
 	static ref FUNC_ITEMS: Vec<FuncItem> = vec![
-		plugindata::FuncItem_Run()
+		plugindata::FuncItem_Run(),
+		plugindata::FuncItem_Build(),
 	];
 }
 
@@ -40,7 +42,7 @@ pub extern "C" fn getName() -> * const TCHAR{
 
 #[no_mangle]
 pub extern "C" fn getFuncsArray( nbF: *mut i32) -> *const FuncItem{
-	unsafe { *nbF = 1 };
+	unsafe { *nbF = std::mem::transmute( FUNC_ITEMS.len() ) };
 	FUNC_ITEMS.as_ptr()
 }
 
