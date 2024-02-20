@@ -8,6 +8,5 @@ crate-type = ["dylib"]
 
 [dependencies]
 libc="*"
-winapi="*"
-lazy_static = "0.1.*"
-user32-sys = "*"
+winapi = { version = "0.3.9", features = ["winuser"] }
+lazy_static = "1.4.*"

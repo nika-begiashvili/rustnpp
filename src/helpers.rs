@@ -1,11 +1,11 @@
+extern crate winapi;
 
 use std;
 use std::process::Command;
 use def::{from_wide_ptr,TCHAR};
 use plugindata::getNppHandle;
-use winapi::winuser;
-use winapi::minwindef;
-use user32::SendMessageW;
+use winapi::um::winuser;
+use winapi::shared::minwindef;
 
 const NPPM_GETFULLCURRENTPATH :minwindef::UINT = winuser::WM_USER + 3001;
 
@@ -21,7 +21,7 @@ pub fn getCurrentNppFile() -> String{
 	let mut fPath: Vec<TCHAR>  = vec![0;255];
 	
 	unsafe{
-		SendMessageW( 
+		winuser::SendMessageW( 
 			getNppHandle()._nppHandle,
 			NPPM_GETFULLCURRENTPATH, 0, 
 			std::mem::transmute( fPath.as_ptr() )

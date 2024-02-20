@@ -1,0 +1,28 @@
+name: CI_build
+
+on: [push, pull_request]
+
+jobs:
+  build:
+
+    runs-on: windows-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        build_target: [x86_64, i686, aarch64]
+
+    steps:
+    - name: Checkout repo
+      uses: actions/checkout@v4
+
+    - name: Build of plugin dll for ${{ matrix.build_target }}
+      run: |
+           rustup target add ${{ matrix.build_target }}-pc-windows-msvc
+           cargo build --verbose --target ${{ matrix.build_target }}-pc-windows-msvc
+           cargo build --release --target ${{ matrix.build_target }}-pc-windows-msvc
+
+    - name: Archive artifacts for ${{ matrix.build_target }}
+      uses: actions/upload-artifact@v4
+      with:
+          name: plugin_dll_${{ matrix.build_target }}
+          path: target\${{ matrix.build_target }}-pc-windows-msvc\release\rustnpp.dll
