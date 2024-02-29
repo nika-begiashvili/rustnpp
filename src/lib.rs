@@ -1,4 +1,4 @@
-#![crate_type = "dylib"]
+#![crate_type = "cdylib"]
 #![allow(non_camel_case_types)]
 #![allow(non_snake_case)]
 
@@ -18,7 +18,7 @@ mod functions;
 extern crate lazy_static;
 
 lazy_static! {
-    static ref PROG_NAME: Vec<u16> = to_wide_chars("Rust plugin");
+	static ref PROG_NAME: Vec<u16> = to_wide_chars("Rust plugin");
 	static ref FUNC_ITEMS: Vec<FuncItem> = vec![
 		plugindata::FuncItem_Run(),
 		plugindata::FuncItem_Build(),
