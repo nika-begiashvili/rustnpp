@@ -2,8 +2,8 @@
 extern crate winapi;
 extern crate libc;
 
-use winapi::windef;
-use winapi::minwindef;
+use winapi::shared::windef;
+use winapi::shared::minwindef;
 use std;
 
 pub type TCHAR = u16;

@@ -1,13 +1,12 @@
-#![crate_type = "dylib"]
+#![crate_type = "cdylib"]
 #![allow(non_camel_case_types)]
 #![allow(non_snake_case)]
 
 extern crate libc;
 extern crate winapi;
-extern crate user32;
 extern crate core;
 
-use winapi::minwindef;
+use winapi::shared::minwindef;
 use def::{to_wide_chars,TCHAR,NppData,FuncItem};
 
 mod def;
@@ -19,7 +18,7 @@ mod functions;
 extern crate lazy_static;
 
 lazy_static! {
-    static ref PROG_NAME: Vec<u16> = to_wide_chars("Rust plugin");
+	static ref PROG_NAME: Vec<u16> = to_wide_chars("Rust plugin");
 	static ref FUNC_ITEMS: Vec<FuncItem> = vec![
 		plugindata::FuncItem_Run(),
 		plugindata::FuncItem_Build(),
@@ -42,7 +41,9 @@ pub extern "C" fn getName() -> * const TCHAR{
 
 #[no_mangle]
 pub extern "C" fn getFuncsArray( nbF: *mut i32) -> *const FuncItem{
-	unsafe { *nbF = std::mem::transmute( FUNC_ITEMS.len() ) };
+	let items = FUNC_ITEMS.len();
+	let itemsize =  items as i32;
+	unsafe { *nbF = itemsize };
 	FUNC_ITEMS.as_ptr()
 }
 
@@ -63,5 +64,5 @@ pub extern "C" fn messageProc(
 		::MessageBox(NULL, "move", "", MB_OK);
 	}
 */
-	minwindef::TRUE
+	minwindef::TRUE as minwindef::LRESULT
 }
